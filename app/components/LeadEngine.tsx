@@ -72,8 +72,12 @@ export default function LeadEngine({
         onScrape={onScrape}
       />
 
-      {/* Metrics Dashboard Row */}
-      <MetricsGrid searchNiche={searchNiche} searchLocation={searchLocation} />
+      {/* Metrics Dashboard Row - passing total lead count */}
+      <MetricsGrid
+        searchNiche={searchNiche}
+        searchLocation={searchLocation}
+        totalLeads={leads.length}
+      />
 
       {/* Filter & Export Bar */}
       <FilterBar

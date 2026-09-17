@@ -15,7 +15,8 @@ export default function LeadPulseDashboard() {
   const [isScraping, setIsScraping] = useState(false);
   const [selectedAuditFilter, setSelectedAuditFilter] = useState("ALL");
 
-  const leads = [
+  // Initial dummy or empty state leads before scraping
+  const [leads, setLeads] = useState([
     {
       id: 1,
       business: "Summit Dentist Partners",
@@ -71,11 +72,24 @@ export default function LeadPulseDashboard() {
       tier: "WARM",
       status: "NEW",
     },
-  ];
+  ]);
 
-  const handleScrape = () => {
+  // Hooking up the real fetch to your new API route
+  const handleScrape = async () => {
     setIsScraping(true);
-    setTimeout(() => setIsScraping(false), 1500);
+    try {
+      const res = await fetch(
+        `/api/leads?niche=${encodeURIComponent(searchNiche)}&location=${encodeURIComponent(searchLocation)}`
+      );
+      const data = await res.json();
+      if (data.leads) {
+        setLeads(data.leads);
+      }
+    } catch (error) {
+      console.error("Failed to fetch live leads:", error);
+    } finally {
+      setIsScraping(false);
+    }
   };
 
   return (
