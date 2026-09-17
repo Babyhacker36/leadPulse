@@ -1,0 +1,392 @@
+"use client";
+
+import { useState } from "react";
+
+// LeadPulse Local Lead & Outreach Engine - Canonical Tailwind Version
+export default function LeadPulseDashboard() {
+  const [activeTab, setActiveTab] = useState<
+    "leads" | "campaigns" | "settings"
+  >("leads");
+  const [searchNiche, setSearchNiche] = useState("Dentists");
+  const [searchLocation, setSearchLocation] = useState("Austin, TX");
+  const [isScraping, setIsScraping] = useState(false);
+  const [selectedAuditFilter, setSelectedAuditFilter] = useState("ALL");
+
+  // Mock Lead Data matching the current dark/clean UI interface
+  const leads = [
+    {
+      id: 1,
+      business: "Summit Dentist Partners",
+      domain: "summitdentist.com",
+      phone: "(512) 781-7114",
+      grade: "D",
+      failure: "multiple failures",
+      score: 84,
+      tier: "HOT",
+      status: "NEW",
+    },
+    {
+      id: 2,
+      business: "Halstead Dentist LLC",
+      domain: "halsteaddentist.com",
+      phone: "(512) 302-3139",
+      grade: "C+",
+      failure: "slow on mobile",
+      score: 73,
+      tier: "WARM",
+      status: "NEW",
+    },
+    {
+      id: 3,
+      business: "Northgate Dentist",
+      domain: "northgatedentist.com",
+      phone: "(512) 705-6081",
+      grade: "C+",
+      failure: "slow on mobile",
+      score: 70,
+      tier: "WARM",
+      status: "NEW",
+    },
+    {
+      id: 4,
+      business: "Hollis Dentist Co.",
+      domain: "hollisdentist.com",
+      phone: "(512) 889-7311",
+      grade: "C+",
+      failure: "slow on mobile",
+      score: 70,
+      tier: "WARM",
+      status: "NEW",
+    },
+    {
+      id: 5,
+      business: "Lantern Dentist & Sons",
+      domain: "lanterndentist.com",
+      phone: "(512) 508-6126",
+      grade: "C+",
+      failure: "slow on mobile",
+      score: 67,
+      tier: "WARM",
+      status: "NEW",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-background text-foreground font-sans antialiased selection:bg-orange-500/30">
+      {/* Top Navigation Bar */}
+      <header className="h-15 max-w-360 mx-auto px-6 flex items-center justify-between border-b border-neutral-800 bg-background/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center font-bold text-white shadow-lg shadow-orange-600/20">
+            LP
+          </div>
+          <span className="font-semibold tracking-tight text-lg">
+            LeadPulse
+          </span>
+          <span className="text-[10px] uppercase font-mono tracking-widest px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">
+            v1.0
+          </span>
+        </div>
+
+        <nav className="flex items-center gap-1.75 bg-neutral-900/60 p-1.25 rounded-full border border-neutral-800">
+          <button
+            onClick={() => setActiveTab("leads")}
+            className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+              activeTab === "leads"
+                ? "bg-orange-600 text-white shadow-sm"
+                : "text-neutral-400 hover:text-white"
+            }`}
+          >
+            Leads
+          </button>
+          <button
+            onClick={() => setActiveTab("campaigns")}
+            className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+              activeTab === "campaigns"
+                ? "bg-orange-600 text-white shadow-sm"
+                : "text-neutral-400 hover:text-white"
+            }`}
+          >
+            Campaigns
+          </button>
+          <button
+            onClick={() => setActiveTab("settings")}
+            className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+              activeTab === "settings"
+                ? "bg-orange-600 text-white shadow-sm"
+                : "text-neutral-400 hover:text-white"
+            }`}
+          >
+            Settings
+          </button>
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-neutral-400 font-mono hidden sm:inline">
+            CRONJOB: ONLINE
+          </span>
+          <div className="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center font-medium text-xs">
+            LC
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="max-w-360 mx-auto px-6 py-8">
+        {activeTab === "leads" && (
+          <div className="space-y-6">
+            {/* Engine Subtitle Banner */}
+            <div>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-orange-500 block mb-1">
+                Local Lead Engine
+              </span>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+                Find businesses worth fixing.
+              </h1>
+              <p className="text-sm text-neutral-400 mt-1">
+                Scrape a niche in any market, grade every site, and draft the
+                outreach in one pass.
+              </p>
+            </div>
+
+            {/* Search Bar Box */}
+            <div className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-4 flex flex-col md:flex-row gap-3 shadow-xl backdrop-blur-sm">
+              <div className="flex-1 flex items-center bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 focus-within:border-orange-500 transition-colors">
+                <span className="text-neutral-500 mr-3">🔍</span>
+                <input
+                  type="text"
+                  value={searchNiche}
+                  onChange={(e) => setSearchNiche(e.target.value)}
+                  placeholder="Niche (e.g., Dentists, Roofers)"
+                  className="bg-transparent border-none outline-none w-full text-sm placeholder:text-neutral-600"
+                />
+              </div>
+              <div className="flex-1 flex items-center bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 focus-within:border-orange-500 transition-colors">
+                <span className="text-neutral-500 mr-3">📍</span>
+                <input
+                  type="text"
+                  value={searchLocation}
+                  onChange={(e) => setSearchLocation(e.target.value)}
+                  placeholder="Location (e.g., Austin, TX)"
+                  className="bg-transparent border-none outline-none w-full text-sm placeholder:text-neutral-600"
+                />
+              </div>
+              <button
+                disabled={isScraping}
+                onClick={() => {
+                  setIsScraping(true);
+                  setTimeout(() => setIsScraping(false), 1500);
+                }}
+                className="bg-orange-600 hover:bg-orange-500 text-white font-medium px-6 py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm shadow-lg shadow-orange-600/20 active:scale-95 disabled:opacity-50"
+              >
+                {isScraping ? "Scraping Leads..." : "⚡ Scrape Leads"}
+              </button>
+            </div>
+
+            {/* Metrics Dashboard Row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-5">
+                <span className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase block mb-2">
+                  Leads Found
+                </span>
+                <div className="text-3xl font-bold tracking-tight">8</div>
+                <div className="text-xs text-neutral-400 mt-1">
+                  {searchNiche} - {searchLocation}
+                </div>
+              </div>
+              <div className="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-5">
+                <span className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase block mb-2">
+                  Avg Outreach Score
+                </span>
+                <div className="text-3xl font-bold tracking-tight text-orange-400">
+                  68
+                </div>
+                <div className="text-xs text-neutral-400 mt-1">
+                  Weighted by audit gap
+                </div>
+              </div>
+              <div className="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-5">
+                <span className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase block mb-2">
+                  Hot Leads
+                </span>
+                <div className="text-3xl font-bold tracking-tight text-red-400">
+                  1
+                </div>
+                <div className="text-xs text-neutral-400 mt-1">
+                  Score 80 and above
+                </div>
+              </div>
+              <div className="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-5">
+                <span className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase block mb-2">
+                  Contacted
+                </span>
+                <div className="text-3xl font-bold tracking-tight">0/8</div>
+                <div className="text-xs text-neutral-400 mt-1">
+                  Drafts copied and sent
+                </div>
+              </div>
+            </div>
+
+            {/* Filter & Export Bar */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-neutral-900/40 p-3 rounded-xl border border-neutral-800/80">
+              <div className="flex items-center gap-1 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+                <span className="text-xs text-neutral-500 mr-2 flex items-center gap-1">
+                  ⚙️ Audit Grade
+                </span>
+                {["ALL", "B", "C", "C2", "C+", "D", "F"].map((grade) => (
+                  <button
+                    key={grade}
+                    onClick={() => setSelectedAuditFilter(grade)}
+                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                      selectedAuditFilter === grade
+                        ? "bg-orange-600 text-white"
+                        : "bg-neutral-800/60 text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                    }`}
+                  >
+                    {grade}
+                  </button>
+                ))}
+              </div>
+              <button className="bg-neutral-800 hover:bg-neutral-700 text-xs font-medium px-4 py-2 rounded-lg border border-neutral-700 transition-colors flex items-center gap-2">
+                📥 Export CSV
+              </button>
+            </div>
+
+            {/* Data Table */}
+            <div className="bg-neutral-900/60 border border-neutral-800 rounded-2xl overflow-hidden shadow-xl">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-neutral-950/80 text-neutral-400 text-xs uppercase font-mono tracking-wider border-b border-neutral-800">
+                    <tr>
+                      <th className="py-3.75 px-6 font-medium">Business</th>
+                      <th className="py-3.75 px-6 font-medium">Phone</th>
+                      <th className="py-3.75 px-6 font-medium">Audit Grade</th>
+                      <th className="py-3.75 px-6 font-medium">
+                        AI Outreach Score
+                      </th>
+                      <th className="py-3.75 px-6 font-medium">Status</th>
+                      <th className="py-3.75 px-6 font-medium text-right">
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-800/60">
+                    {leads.map((lead) => (
+                      <tr
+                        key={lead.id}
+                        className="hover:bg-neutral-800/30 transition-colors"
+                      >
+                        <td className="py-4 px-6">
+                          <div className="font-medium text-white">
+                            {lead.business}
+                          </div>
+                          <div className="text-xs text-neutral-500 flex items-center gap-1 mt-0.5">
+                            🔗 {lead.domain}
+                          </div>
+                        </td>
+                        <td className="py-4 px-6 text-neutral-400 font-mono text-xs">
+                          {lead.phone}
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-neutral-800 border border-neutral-700 text-xs font-mono">
+                            <span className="font-bold text-orange-400">
+                              {lead.grade}
+                            </span>
+                            <span className="text-neutral-400">
+                              {lead.failure}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm">
+                              {lead.score}
+                            </span>
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">
+                              {lead.tier}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-4 px-6">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-800 text-neutral-300 border border-neutral-700">
+                            {lead.status}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 text-right">
+                          <button className="bg-orange-600/10 hover:bg-orange-600 text-orange-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-medium border border-orange-500/20 transition-all">
+                            ✍️ Draft Email
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "campaigns" && (
+          <div className="space-y-6">
+            <div>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-orange-500 block mb-1">
+                Outreach Sequences
+              </span>
+              <h1 className="text-3xl font-bold tracking-tight">
+                Automated Campaigns
+              </h1>
+              <p className="text-sm text-neutral-400 mt-1">
+                Manage your spaced outreach emails and track response
+                conversions safely.
+              </p>
+            </div>
+            <div className="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-12 text-center">
+              <p className="text-neutral-400 text-sm">
+                No active automated campaigns yet. Scrape leads to get started.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "settings" && (
+          <div className="space-y-6">
+            <div>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-orange-500 block mb-1">
+                System Configuration
+              </span>
+              <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+              <p className="text-sm text-neutral-400 mt-1">
+                Configure your API keys, safety throttling rules, and outreach
+                templates.
+              </p>
+            </div>
+            <div className="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-6 space-y-4">
+              <div>
+                <label className="text-xs font-mono uppercase text-neutral-400 block mb-2">
+                  OpenAI / Claude API Key
+                </label>
+                <input
+                  type="password"
+                  placeholder="sk-..."
+                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm outline-none focus:border-orange-500"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-mono uppercase text-neutral-400 block mb-2">
+                  Message Spacing Delay (Minutes)
+                </label>
+                <input
+                  type="number"
+                  defaultValue={15}
+                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm outline-none focus:border-orange-500"
+                />
+              </div>
+              <button className="bg-orange-600 hover:bg-orange-500 text-white font-medium px-5 py-2.5 rounded-xl text-xs transition-colors">
+                Save Settings
+              </button>
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
