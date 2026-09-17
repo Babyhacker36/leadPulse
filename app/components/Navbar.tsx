@@ -1,9 +1,17 @@
 "use client";
 
+export type Tab = "leads" | "automation" | "settings";
+
 interface NavbarProps {
-  activeTab: "leads" | "campaigns" | "settings";
-  setActiveTab: (tab: "leads" | "campaigns" | "settings") => void;
+  activeTab: Tab;
+  setActiveTab: (tab: Tab) => void;
 }
+
+const TAB_LABELS: Record<Tab, string> = {
+  leads: "Leads",
+  automation: "Automation",
+  settings: "Settings",
+};
 
 export default function Navbar({ activeTab, setActiveTab }: NavbarProps) {
   return (
@@ -19,17 +27,17 @@ export default function Navbar({ activeTab, setActiveTab }: NavbarProps) {
       </div>
 
       <nav className="flex items-center gap-1.75 bg-neutral-900/60 p-1.25 rounded-full border border-neutral-800">
-        {(["leads", "campaigns", "settings"] as const).map((tab) => (
+        {(["leads", "automation", "settings"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-1.5 rounded-full text-xs font-medium capitalize transition-all ${
+            className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
               activeTab === tab
                 ? "bg-orange-600 text-white shadow-sm"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
-            {tab}
+            {TAB_LABELS[tab]}
           </button>
         ))}
       </nav>
